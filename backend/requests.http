@@ -1,0 +1,53 @@
+@base = http://localhost:3000/api
+@token = COLE_O_TOKEN_AQUI
+
+### Cadastro
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Usuario Teste",
+  "cpf": "12345678901",
+  "email": "teste1@viabank.local",
+  "phone": "11999990001",
+  "birthDate": "2000-01-01",
+  "password": "12345678"
+}
+
+### Login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste1@viabank.local",
+  "password": "12345678"
+}
+
+### Conta
+GET {{base}}/account
+Authorization: Bearer {{token}}
+
+### Deposito de desenvolvimento
+POST {{base}}/account/deposit
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 1000.00,
+  "description": "Carga para testes"
+}
+
+### PIX
+POST {{base}}/pix/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "key": "teste2@viabank.local",
+  "amount": 25.50,
+  "description": "Teste PIX"
+}
+
+### Extrato
+GET {{base}}/transactions?period=30d&page=1&limit=50
+Authorization: Bearer {{token}}

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0f1f" />
+  <title>Via Bank — Banco digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <script>
+    if (!localStorage.getItem("via_access_token")) {
+      window.location.replace("login.html");
+    }
+  </script>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-mark">N</div>
+          <div>
+            <strong>Via</strong>
+            <span>bank</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active" data-page="home"><span>⌂</span> Início</button>
+          <button class="nav-item" data-page="pix"><span>↗</span> PIX</button>
+          <button class="nav-item" data-page="cards"><span>▣</span> Cartões</button>
+          <button class="nav-item" data-page="statement"><span>≡</span> Extrato</button>
+          <button class="nav-item" data-page="investments"><span>⌁</span> Investimentos</button>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-page="settings"><span>⚙</span> Configurações</button>
+        <button class="nav-item danger" id="logoutBtn"><span>↪</span> Sair</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+        <div>
+          <p class="eyebrow">CONTA DIGITAL</p>
+          <h1 id="pageTitle">Visão geral</h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="eyeBtn" title="Ocultar valores">◉</button>
+          <button class="icon-btn notification" id="notificationBtn">♢<i></i></button>
+          <div class="avatar" id="topAvatar">—</div>
+        </div>
+      </header>
+
+      <section class="page active" id="page-home">
+        <div class="hero-grid">
+          <article class="balance-card">
+            <div class="card-head">
+              <span>Saldo disponível</span>
+              <span class="status-dot">Carregando...</span>
+            </div>
+            <div class="balance money" data-value="">Carregando...</div>
+            <div class="balance-meta">
+              <span>Conta indisponível</span>
+              <span id="accountYield">Carregando...</span>
+            </div>
+            <div class="quick-actions">
+              <button data-go="pix">↗ <span>PIX</span></button>
+              <button data-action="deposit">＋ <span>Depositar</span></button>
+              <button data-go="statement">≡ <span>Extrato</span></button>
+              <button data-go="cards">▣ <span>Cartões</span></button>
+            </div>
+          </article>
+
+          <article class="score-card">
+            <div class="score-ring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                <circle cx="60" cy="60" r="50" class="ring-progress" id="scoreRing"/>
+              </svg>
+              <div><strong id="scoreValue">—</strong><span>score</span></div>
+            </div>
+            <div>
+              <p class="eyebrow">SAÚDE FINANCEIRA</p>
+              <h3 id="financialHealthLabel">Carregando...</h3>
+              <p><span id="financialHealthDescription">Consultando dados...</span></p>
+            </div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">MOVIMENTAÇÕES</p>
+                <h2>Últimas transações</h2>
+              </div>
+              <button class="text-btn" data-go="statement">Ver tudo →</button>
+            </div>
+            <div class="transaction-list" id="homeTransactions"></div>
+          </article>
+
+          <article class="panel spending-panel">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">PERÍODO ATUAL</p>
+                <h2>Gastos por categoria</h2>
+              </div>
+              <strong class="money" id="spendingTotal" data-value="">Carregando...</strong>
+            </div>
+            <div class="bars" id="spendingCategories">
+              <div class="empty-state">Carregando...</div>
+            </div>
+          </article>
+        </div>
+
+        <article class="banner">
+          <div>
+            <span class="tag">VIA INVEST</span>
+            <h2>Seu dinheiro pode trabalhar enquanto você dorme.</h2>
+            <p>Invista a partir de R$ 1 em opções para diferentes perfis.</p>
+            <button class="primary-btn" data-go="investments">Explorar investimentos</button>
+          </div>
+          <div class="orb"></div>
+        </article>
+      </section>
+
+      <section class="page" id="page-pix">
+        <div class="two-columns">
+          <article class="panel">
+            <p class="eyebrow">TRANSFERÊNCIA INSTANTÂNEA</p>
+            <h2>Enviar PIX</h2>
+            <form id="pixForm" class="form-grid">
+              <label>Chave PIX
+                <input id="pixKey" required placeholder="CPF, e-mail, telefone ou chave aleatória" />
+              </label>
+              <label>Valor
+                <div class="currency-input"><span>R$</span><input id="pixValue" required inputmode="decimal" placeholder="0,00" /></div>
+              </label>
+              <label>Descrição
+                <input id="pixDescription" placeholder="Ex.: Jantar, aluguel, presente..." maxlength="40" />
+              </label>
+              <button class="primary-btn full" type="submit">Continuar</button>
+            </form>
+          </article>
+
+          <article class="panel">
+            <p class="eyebrow">ACESSO RÁPIDO</p>
+            <h2>Minhas chaves</h2>
+            <div class="key-list" id="pixKeys"><div class="empty-state">Carregando...</div></div>
+          </article>
+        </div>
+
+        <article class="panel">
+          <div class="section-title"><div><p class="eyebrow">FAVORITOS</p><h2>Contatos recentes</h2></div></div>
+          <div class="contacts" id="pixFavorites"><div class="empty-state">Carregando...</div></div>
+        </article>
+      </section>
+
+      <section class="page" id="page-cards">
+        <div class="cards-layout">
+          <div class="bank-card-wrap">
+            <div class="bank-card" id="bankCard">
+              <div class="bank-card-top">
+                <div class="brand mini"><div class="brand-mark">N</div><strong>Via</strong></div>
+                <span id="cardBrand">—</span>
+              </div>
+              <div class="chip">▦</div>
+              <div class="card-number" id="cardNumber">••••&nbsp;&nbsp;••••&nbsp;&nbsp;••••&nbsp;&nbsp;••••</div>
+              <div class="bank-card-bottom">
+                <div><small>TITULAR</small><strong id="cardHolder">TITULAR</strong></div>
+                <div><small>VALIDADE</small><strong id="cardExpiration">—/—</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <article class="panel">
+            <p class="eyebrow" id="cardProductName">CARTÃO</p>
+            <h2>Controle do cartão</h2>
+            <div class="limit">
+              <div><span>Limite usado</span><strong class="money" data-value="">Carregando...</strong></div>
+              <div class="limit-bar"><i></i></div>
+              <div><small>Disponível: <span class="money" data-value="">Carregando...</span></small><small>Limite: —</small></div>
+            </div>
+            <div class="switch-row">
+              <div><strong>Cartão desbloqueado</strong><small>Bloqueie temporariamente quando quiser.</small></div>
+              <label class="switch"><input type="checkbox" id="cardLock" checked><span></span></label>
+            </div>
+            <div class="card-actions">
+              <button>⌘ Ver dados</button>
+              <button>◎ Cartão virtual</button>
+              <button>⊕ Ajustar limite</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-statement">
+        <article class="panel">
+          <div class="section-title statement-head">
+            <div><p class="eyebrow">CONTA CORRENTE</p><h2>Extrato</h2></div>
+            <div class="filters">
+              <button class="active">30 dias</button><button>90 dias</button><button>2026</button>
+            </div>
+          </div>
+          <div class="statement-summary">
+            <div><span>Entradas</span><strong class="positive" id="statementIncome">Carregando...</strong></div>
+            <div><span>Saídas</span><strong class="negative" id="statementExpenses">Carregando...</strong></div>
+            <div><span>Saldo atual</span><strong class="money" data-value="">Carregando...</strong></div>
+          </div>
+          <div class="transaction-list large" id="statementTransactions"></div>
+        </article>
+      </section>
+
+      <section class="page" id="page-investments">
+        <div class="investment-hero">
+          <div>
+            <p class="eyebrow">VIA INVEST</p>
+            <h2>Patrimônio investido</h2>
+            <div class="investment-total money" data-value="">Carregando...</div>
+            <span class="positive" id="investmentReturn">Carregando...</span>
+          </div>
+          <div class="mini-chart">
+            <svg viewBox="0 0 420 140" preserveAspectRatio="none">
+              <path d="M0,115 C60,103 70,92 110,95 S165,78 205,82 S270,42 315,58 S365,28 420,18" fill="none" stroke="currentColor" stroke-width="4"/>
+              <path d="M0,115 C60,103 70,92 110,95 S165,78 205,82 S270,42 315,58 S365,28 420,18 L420,140 L0,140 Z" fill="currentColor" opacity=".08"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="investment-grid" id="investmentProducts"><article class="investment-card"><h3>Carregando...</h3><p>Consultando investimentos disponíveis.</p></article></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="two-columns">
+          <article class="panel">
+            <p class="eyebrow">PERFIL</p><h2>Dados pessoais</h2>
+            <div class="profile-box"><div class="avatar large-avatar" id="profileAvatar">—</div><div><strong id="profileName">Cliente Via</strong><small id="profileSince">Dados indisponíveis</small></div></div>
+            <div class="settings-list">
+              <button><span>Dados cadastrais</span><b>›</b></button>
+              <button><span>Segurança e acesso</span><b>›</b></button>
+              <button><span>Privacidade</span><b>›</b></button>
+            </div>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">APARÊNCIA</p><h2>Preferências</h2>
+            <div class="switch-row"><div><strong>Modo compacto</strong><small>Reduz espaços da interface.</small></div><label class="switch"><input type="checkbox"><span></span></label></div>
+            <div class="switch-row"><div><strong>Notificações</strong><small>Alertas de movimentações e segurança.</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-backdrop" id="pixModal">
+    <div class="modal">
+      <button class="modal-close" data-close>×</button>
+      <div class="modal-icon">↗</div>
+      <p class="eyebrow">CONFIRME O PIX</p>
+      <h2 id="confirmPixTitle">Enviar R$ 0,00</h2>
+      <div class="confirm-box">
+        <div><span>Para</span><strong id="confirmPixKey"></strong></div>
+        <div><span>Descrição</span><strong id="confirmPixDescription"></strong></div>
+      </div>
+      <button class="primary-btn full" id="confirmPixBtn">Confirmar transferência</button>
+      <button class="ghost-btn full" data-close>Cancelar</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="investModal">
+    <div class="modal">
+      <button class="modal-close" data-close>×</button>
+      <div class="modal-icon">⌁</div>
+      <p class="eyebrow">NOVO INVESTIMENTO</p>
+      <h2 id="investTitle">Investir</h2>
+      <label class="modal-label">Valor
+        <div class="currency-input"><span>R$</span><input id="investValue" inputmode="decimal" placeholder="0,00"></div>
+      </label>
+      <button class="primary-btn full" id="confirmInvestBtn">Confirmar investimento</button>
+    </div>
+  </div>
+  <script src="backend.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
